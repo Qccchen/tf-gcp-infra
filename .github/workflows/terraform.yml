@@ -1,4 +1,4 @@
-name: 'Terraform'
+name: 'Terraform Validate'
 
 on:
   push:
@@ -25,27 +25,30 @@ jobs:
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
 
-    - name: Setup terraform variables
-      id: vars
-      run: |-
-        cat > pipeline.auto.tfvars <<EOF
-        region="${{ vars.GCP_REGION }}" 
-        project_id="${{ vars.GCP_PROJECT_ID }}" 
-        EOF
+    # - name: Setup terraform variables
+    #   id: vars
+    #   run: |-
+    #     cat > pipeline.auto.tfvars <<EOF
+    #     region="${{ vars.GCP_REGION }}" 
+    #     project_id="${{ vars.GCP_PROJECT_ID }}" 
+    #     EOF
 
     - name: Terraform Init
       run: terraform init
-      env: 
-        CREDENTIALS_FILE: ${{ secrets.GOOGLE_CREDENTIALS }} 
+      # env: 
+      #   CREDENTIALS_FILE: ${{ secrets.GOOGLE_CREDENTIALS }} 
+    
+    - name: Terraform Validate
+      run: terraform validate
 
-    - name: Terraform Plan
-      run: terraform plan -input=false
-      env: 
-        CREDENTIALS_FILE: ${{ secrets.GOOGLE_CREDENTIALS }} 
+    # - name: Terraform Plan
+    #   run: terraform plan -input=false
+    #   env: 
+    #     CREDENTIALS_FILE: ${{ secrets.GOOGLE_CREDENTIALS }} 
 
-    - name: Terraform Apply
-      if: github.ref == 'refs/heads/"main"' && github.event_name == 'push'
-      run: terraform apply -auto-approve -input=false
-      env: 
-        CREDENTIALS_FILE: ${{ secrets.GOOGLE_CREDENTIALS }} 
+    # - name: Terraform Apply
+    #   if: github.ref == 'refs/heads/"main"' && github.event_name == 'push'
+    #   run: terraform apply -auto-approve -input=false
+    #   env: 
+    #     CREDENTIALS_FILE: ${{ secrets.GOOGLE_CREDENTIALS }} 
       
