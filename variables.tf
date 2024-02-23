@@ -55,3 +55,83 @@ variable "router_next_hop" {
   description = "Next hop for the Cloud Router"
   default     = "default-internet-gateway"
 }
+
+variable "firewall_allow_name" {
+  description = "Name of the firewall rule to allow traffic"
+  default     = "allow-application-traffic"
+}
+
+variable "firewall_deny_name" {
+  description = "Name of the firewall rule to deny traffic"
+  default     = "deny-ssh-from-internet"
+}
+
+variable "firewall_protocols" {
+  description = "Protocols for the firewall rule"
+  default     = "tcp"
+}
+
+variable "firewall_allow_ports" {
+  description = "Ports for the firewall rule"
+  default     = ["8080"]
+}
+
+variable "firewall_deny_ports" {
+  description = "Ports for the firewall rule"
+  default     = ["22"]
+} 
+
+variable "firewall_tag" {
+  description = "Tag for the firewall rule"
+  default     = "web-servers"
+}
+
+variable "source_ranges" {
+  description = "Source ranges for the firewall rule"
+  default     = ["0.0.0.0/0"]
+}
+
+variable "vm_instance_name" {
+  description = "Name of the VM instance"
+  default     = "my-vm-instance"
+}
+
+variable "vm_instance_type" {
+  description = "Type of the VM instance"
+  default     = "e2-micro"
+}
+
+variable "vm_instance_zone" {
+  description = "Zone of the VM instance"
+  default     = "us-west2-a"
+}
+
+variable "custom_image" {
+  description = "Custom image for the VM instance"
+  default     = "packer-1708684468"
+}
+
+variable "disk_size" {
+  description = "Size of the disk"
+  default     = 100
+}
+
+variable "disk_type" {
+  description = "Type of the disk"
+  default     = "pd-balanced"
+}
+
+variable "service_account_email" {
+  description = "Service account email"
+  default     = "packer@tribal-affinity-414200.iam.gserviceaccount.com"
+}
+
+variable "service_account_scopes" {
+  description = "Scopes for the service account"
+  default     = ["cloud-platform"]
+}
+
+variable "static_ip_name" {
+  description = "Name of the static IP"
+  default     = "ipv4-address"
+}
