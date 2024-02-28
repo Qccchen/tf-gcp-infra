@@ -7,13 +7,16 @@ variable "region" {
   default     = "us-west2"
 }
 
+variable "credentials_file" {
+  description = "Path to the service account key JSON file"
+}
+
+# ==================================================
+# VPC variables
+
 variable "routing_mode" {
   description = "Routing mode for the VPC"
   default     = "REGIONAL"
-}
-
-variable "credentials_file" {
-  description = "Path to the service account key JSON file"
 }
 
 variable "vpc_name" {
@@ -56,6 +59,24 @@ variable "router_next_hop" {
   default     = "default-internet-gateway"
 }
 
+variable "private_services_access_name" {
+  description = "The name of the private services access"
+  default     = "private-ip-address"
+}
+
+variable "address_type" {
+  description = "The type of address to reserve"
+  default     = "INTERNAL"
+}
+
+variable "purpose" {
+  description = "The purpose of the address"
+  default     = "VPC_PEERING"
+}
+
+# ==================================================
+# Firewall variables
+
 variable "firewall_allow_name" {
   description = "Name of the firewall rule to allow traffic"
   default     = "allow-application-traffic"
@@ -86,37 +107,39 @@ variable "firewall_tag" {
   default     = "web-servers"
 }
 
-variable "source_ranges" {
+variable "firewall_source_ranges" {
   description = "Source ranges for the firewall rule"
   default     = ["0.0.0.0/0"]
 }
 
-variable "vm_instance_name" {
-  description = "Name of the VM instance"
-  default     = "my-vm-instance"
+# ==================================================
+# Webapp instance variables
+
+variable "webapp_instance_name" {
+  description = "Name of the webapp instance"
+  default     = "webapp-instance"
 }
 
-variable "vm_instance_type" {
-  description = "Type of the VM instance"
+variable "webapp_instance_type" {
+  description = "Type of the webapp instance"
   default     = "e2-micro"
 }
 
-variable "vm_instance_zone" {
-  description = "Zone of the VM instance"
+variable "webapp_instance_zone" {
+  description = "Zone of the webapp instance"
   default     = "us-west2-a"
 }
 
-variable "custom_image" {
-  description = "Custom image for the VM instance"
-  default     = "packer-1708684468"
+variable "webapp_custom_image" {
+  description = "Custom image for the webapp instance"
 }
 
-variable "disk_size" {
+variable "webapp_disk_size" {
   description = "Size of the disk"
   default     = 100
 }
 
-variable "disk_type" {
+variable "webapp_disk_type" {
   description = "Type of the disk"
   default     = "pd-balanced"
 }
@@ -135,3 +158,47 @@ variable "static_ip_name" {
   description = "Name of the static IP"
   default     = "ipv4-address"
 }
+
+# ==================================================
+# Database instance variables
+
+variable "db_instance_name" {
+  description = "Name of the database instance"
+  default     = "db-instance"
+}
+
+variable "db_version" {
+  description = "Version of the database"
+  default     = "MYSQL_8_0"
+}
+
+variable "db_tier" {
+  description = "Tier of the database"
+  default     = "db-f1-micro"
+}
+
+variable "db_disk_size" {
+  description = "Size of the disk"
+  default     = 100
+}
+
+variable "db_disk_type" {
+  description = "Type of the disk"
+  default     = "PD_SSD"
+}
+
+variable "db_availability_type" {
+  description = "Availability type of the database"
+  default     = "REGIONAL"
+}
+
+variable "db_name" {
+  description = "Name of the database"
+  default     = "webapp"
+}
+
+variable "db_username" {
+  description = "Username for the database"
+  default     = "webapp"
+}
+

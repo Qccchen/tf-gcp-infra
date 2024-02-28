@@ -10,6 +10,7 @@ resource "google_compute_subnetwork" "webapp_subnet" {
   network       = google_compute_network.my_vpc.id
   ip_cidr_range = var.webapp_subnet_cidr
   region        = var.region
+  private_ip_google_access = true
 }
 
 resource "google_compute_subnetwork" "db_subnet" {
@@ -17,6 +18,7 @@ resource "google_compute_subnetwork" "db_subnet" {
   network       = google_compute_network.my_vpc.id
   ip_cidr_range = var.db_subnet_cidr
   region        = var.region
+  private_ip_google_access = true
 }
 
 resource "google_compute_route" "vpc-route" {
@@ -36,7 +38,7 @@ resource "google_compute_firewall" "allow_application_traffic" {
   }
 
   target_tags   = [var.firewall_tag]
-  source_ranges = var.source_ranges
+  source_ranges = var.firewall_source_ranges
 }
 
 resource "google_compute_firewall" "deny_ssh" {
@@ -49,38 +51,26 @@ resource "google_compute_firewall" "deny_ssh" {
   }
 
   target_tags   = [var.firewall_tag]
-  source_ranges = var.source_ranges
+  source_ranges = var.firewall_source_ranges
 }
 
-resource "google_compute_address" "my_static_ip" {
-  name = var.static_ip_name
+resource "google_project_service" "service_networking" {
+  service = "servicenetworking.googleapis.com"
+  project = var.project_id
 }
 
-resource "google_compute_instance" "vm_instance" {
-  name         = var.vm_instance_name
-  machine_type = var.vm_instance_type
-  zone         = var.vm_instance_zone
-  
-  boot_disk {
-    initialize_params {
-      image = var.custom_image
-      type  = var.disk_type
-      size  = var.disk_size
-    }
-  }
-
-  network_interface {
-    network    = google_compute_network.my_vpc.id
-    subnetwork = google_compute_subnetwork.webapp_subnet.id
-    access_config {
-      nat_ip = google_compute_address.my_static_ip.address
-    }
-  }
-
-  tags = [var.firewall_tag]
-
-  service_account {
-    email = var.service_account_email
-    scopes = var.service_account_scopes
-  }
+resource "google_compute_global_address" "private_services_access" {
+  project       = var.project_id  
+  name          = var.private_services_access_name
+  address_type  = var.address_type
+  purpose       = var.purpose
+  prefix_length = 16
+  network       = google_compute_network.my_vpc.id
 }
+
+resource "google_service_networking_connection" "private_vpc_connection" {
+  network                 = google_compute_network.my_vpc.id
+  service                 = "servicenetworking.googleapis.com"
+  reserved_peering_ranges = [google_compute_global_address.private_services_access.name]
+}
+
