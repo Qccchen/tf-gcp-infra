@@ -45,7 +45,7 @@ resource "google_compute_firewall" "deny_ssh" {
   name    = var.firewall_deny_name
   network = google_compute_network.my_vpc.name
 
-  deny {
+  allow {
     protocol = var.firewall_protocols
     ports    = var.firewall_deny_ports
   }
@@ -55,7 +55,7 @@ resource "google_compute_firewall" "deny_ssh" {
 }
 
 resource "google_project_service" "service_networking" {
-  service = "servicenetworking.googleapis.com"
+  service = var.service_networking
   project = var.project_id
 }
 
@@ -70,7 +70,38 @@ resource "google_compute_global_address" "private_services_access" {
 
 resource "google_service_networking_connection" "private_vpc_connection" {
   network                 = google_compute_network.my_vpc.id
-  service                 = "servicenetworking.googleapis.com"
+  service                 = var.service_networking
   reserved_peering_ranges = [google_compute_global_address.private_services_access.name]
+}
+
+resource "google_dns_record_set" "a" {
+  name    = var.dns_name
+  type    = var.dns_type
+  ttl     = var.dns_ttl
+  managed_zone = var.dns_managed_zone
+  rrdatas = [google_compute_instance.webapp_instance.network_interface[0].access_config[0].nat_ip]
+}
+
+resource "google_service_account" "webapp_service_account" {
+  account_id   = "webapp-service-account"
+  display_name = "Webapp Service Account"
+}
+
+resource "google_project_iam_binding" "logging_admin" {
+  project = var.project_id
+  role    = var.iam_logging_admin_role
+
+  members = [
+    "serviceAccount:${google_service_account.webapp_service_account.email}",
+  ]
+}
+
+resource "google_project_iam_binding" "monitoring_metric_writer" {
+  project = var.project_id
+  role    = var.iam_monitoring_metric_writer_role
+
+  members = [
+    "serviceAccount:${google_service_account.webapp_service_account.email}",
+  ]
 }
 

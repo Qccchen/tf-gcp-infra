@@ -30,7 +30,7 @@ resource "google_compute_instance" "webapp_instance" {
   }
 
   service_account {
-    email = var.service_account_email
+    email = google_service_account.webapp_service_account.email
     scopes = var.service_account_scopes
   }
 }

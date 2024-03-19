@@ -74,6 +74,42 @@ variable "purpose" {
   default     = "VPC_PEERING"
 }
 
+variable "service_networking" {
+  description = "Service networking"
+  default     = "servicenetworking.googleapis.com"
+}
+
+variable "dns_name" {
+  description = "value of the dns name"
+  default = "qccchen.me."
+}
+
+variable "dns_type" {
+  description = "value of the dns type"
+  default = "A"
+}
+
+variable "dns_ttl" {
+  description = "value of the dns ttl"
+  default = 300
+}
+
+variable "dns_managed_zone" {
+  description = "value of the managed zone"
+  default = "webapp-zone"
+}
+
+
+variable "iam_logging_admin_role" {
+  description = "The role to assign to the service account"
+  default     = "roles/logging.admin"
+}
+
+variable "iam_monitoring_metric_writer_role" {
+  description = "The role to assign to the service account"
+  default     = "roles/monitoring.metricWriter"
+}
+
 # ==================================================
 # Firewall variables
 
@@ -122,7 +158,7 @@ variable "webapp_instance_name" {
 
 variable "webapp_instance_type" {
   description = "Type of the webapp instance"
-  default     = "e2-micro"
+  default     = "e2-small"
 }
 
 variable "webapp_instance_zone" {
