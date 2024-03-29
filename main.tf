@@ -59,6 +59,10 @@ resource "google_project_service" "service_networking" {
   project = var.project_id
 }
 
+resource "google_compute_address" "my_static_ip" {
+  name = var.static_ip_name
+}
+
 resource "google_compute_global_address" "private_services_access" {
   project       = var.project_id  
   name          = var.private_services_access_name
@@ -82,26 +86,10 @@ resource "google_dns_record_set" "a" {
   rrdatas = [google_compute_instance.webapp_instance.network_interface[0].access_config[0].nat_ip]
 }
 
-resource "google_service_account" "webapp_service_account" {
-  account_id   = "webapp-service-account"
-  display_name = "Webapp Service Account"
+resource "google_vpc_access_connector" "serverless_connector" {
+  name          = "serverless-connector"
+  project       = var.project_id
+  region        = var.region
+  network       = google_compute_network.my_vpc.id
+  ip_cidr_range = "10.8.0.0/28" 
 }
-
-resource "google_project_iam_binding" "logging_admin" {
-  project = var.project_id
-  role    = var.iam_logging_admin_role
-
-  members = [
-    "serviceAccount:${google_service_account.webapp_service_account.email}",
-  ]
-}
-
-resource "google_project_iam_binding" "monitoring_metric_writer" {
-  project = var.project_id
-  role    = var.iam_monitoring_metric_writer_role
-
-  members = [
-    "serviceAccount:${google_service_account.webapp_service_account.email}",
-  ]
-}
-
