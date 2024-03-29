@@ -100,15 +100,6 @@ variable "dns_managed_zone" {
 }
 
 
-variable "iam_logging_admin_role" {
-  description = "The role to assign to the service account"
-  default     = "roles/logging.admin"
-}
-
-variable "iam_monitoring_metric_writer_role" {
-  description = "The role to assign to the service account"
-  default     = "roles/monitoring.metricWriter"
-}
 
 # ==================================================
 # Firewall variables
@@ -195,6 +186,21 @@ variable "static_ip_name" {
   default     = "ipv4-address"
 }
 
+variable "iam_logging_admin_role" {
+  description = "The role to assign to the service account"
+  default     = "roles/logging.admin"
+}
+
+variable "iam_monitoring_metric_writer_role" {
+  description = "The role to assign to the service account"
+  default     = "roles/monitoring.metricWriter"
+}
+
+variable "pub_sub_publisher_role" {
+  description = "The role to assign to the service account"
+  default     = "roles/pubsub.publisher"
+}
+
 # ==================================================
 # Database instance variables
 
@@ -238,3 +244,84 @@ variable "db_username" {
   default     = "webapp"
 }
 
+# ==================================================
+# Pub/Sub  variables
+
+variable "sendgrid_api_key" {
+  description = "SendGrid API key"
+}
+
+variable "pubsub_topic_name" {
+  description = "Name of the Pub/Sub topic"
+  default     = "verify_email"
+}
+
+variable "pubsub_topic_message_retention_duration" {
+  description = "Duration to retain messages in the topic"
+  default     = "604800s"
+}
+
+variable "email_publisher_service_account" {
+  description = "The service account to use for email publishing"
+  default     = "email-publisher"
+}
+
+variable "email_publisher_service_account_display_name" {
+  description = "The display name for the email publisher service account"
+  default     = "Email Publisher Service Account"
+}
+
+variable "cloud_sql_client_role" {
+  description = "The role to assign to the service account"
+  default     = "roles/cloudsql.client"
+}
+
+variable "cloud_functions_bucket_name" {
+  description = "Name of the bucket to store the Cloud Functions"
+  default     = "cloud-functions-bucket-123123"
+}
+
+variable "cloud_functions_bucket_location" {
+  description = "Location of the bucket to store the Cloud Functions"
+  default     = "US"
+}
+
+variable "function_archive_bucket_object_name" {
+  description = "Name of the object in the bucket"
+  default     = "email-verification-function.zip"
+}
+
+variable "function_archive_bucket_source" {
+  description = "Path to the source code"
+  default     = "../serverless/code.zip"
+}
+
+variable "email_verifier_function_name" {
+  description = "Name of the Cloud Function"
+  default     = "sendVerificationEmailFunction"
+}
+
+variable "email_verifier_function_description" {
+  description = "Description of the Cloud Function"
+  default     = "Sends verification emails to new users"
+}
+
+variable "email_verifier_function_runtime" {
+  description = "Runtime for the Cloud Function"
+  default     = "nodejs18"
+}
+
+variable "email_verifier_function_memory" {
+  description = "The amount of memory to allocate to the Cloud Function"
+  default     = 128
+}
+
+variable "email_verifier_function_entry_point" {
+  description = "The entry point for the Cloud Function"
+  default     = "sendVerificationEmail"
+}
+
+variable "email_verifier_function_event_trigger" {
+  description = "The event trigger for the Cloud Function"
+  default     = "google.pubsub.topic.publish"
+}
