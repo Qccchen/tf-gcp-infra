@@ -38,7 +38,8 @@ resource "google_compute_firewall" "allow_application_traffic" {
   }
 
   target_tags   = [var.firewall_tag]
-  source_ranges = var.firewall_source_ranges
+  # source_ranges = var.firewall_source_ranges
+  source_ranges = var.firewall_health_checks_source_ranges
 }
 
 resource "google_compute_firewall" "deny_ssh" {
@@ -79,17 +80,19 @@ resource "google_service_networking_connection" "private_vpc_connection" {
 }
 
 resource "google_dns_record_set" "a" {
-  name    = var.dns_name
-  type    = var.dns_type
-  ttl     = var.dns_ttl
+  name         = var.dns_name
+  type         = var.dns_type
+  ttl          = var.dns_ttl
   managed_zone = var.dns_managed_zone
-  rrdatas = [google_compute_instance.webapp_instance.network_interface[0].access_config[0].nat_ip]
+  # rrdatas      = [google_compute_instance.webapp_instance.network_interface[0].access_config[0].nat_ip]
+  rrdatas      = [google_compute_global_forwarding_rule.default.ip_address]
 }
 
 resource "google_vpc_access_connector" "serverless_connector" {
-  name          = "serverless-connector"
+  name          = var.serverless_connector_name
   project       = var.project_id
   region        = var.region
   network       = google_compute_network.my_vpc.id
-  ip_cidr_range = "10.8.0.0/28" 
+  ip_cidr_range = var.serverless_connector_ip_cidr_range
+
 }

@@ -1,4 +1,6 @@
 resource "google_sql_database_instance" "db_instance" {
+  depends_on = [google_service_networking_connection.private_vpc_connection]
+  
   name             = var.db_instance_name
   database_version = var.db_version
   region           = var.region
@@ -32,7 +34,7 @@ resource "google_sql_database" "webapp_db" {
 resource "random_password" "password" {
   length           = 16
   special          = true
-  override_special = "!#$%&*()-_=+[]{}<>:?"
+  override_special = "[]{}<>:?"
 }
 
 resource "google_sql_user" "webapp_db_user" {
