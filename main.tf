@@ -94,4 +94,5 @@ resource "google_vpc_access_connector" "serverless_connector" {
   region        = var.region
   network       = google_compute_network.my_vpc.id
   ip_cidr_range = var.serverless_connector_ip_cidr_range
+
 }
