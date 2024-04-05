@@ -99,7 +99,15 @@ variable "dns_managed_zone" {
   default = "webapp-zone"
 }
 
+variable "serverless_connector_name" {
+  description = "The name of the serverless connector"
+  default     = "serverless-connector"
+}
 
+variable "serverless_connector_ip_cidr_range" {
+  description = "The IP CIDR range for the serverless connector"
+  default     = "10.8.0.0/28" 
+}
 
 # ==================================================
 # Firewall variables
@@ -121,7 +129,7 @@ variable "firewall_protocols" {
 
 variable "firewall_allow_ports" {
   description = "Ports for the firewall rule"
-  default     = ["8080"]
+  default     = ["8080","443"]
 }
 
 variable "firewall_deny_ports" {
@@ -137,6 +145,11 @@ variable "firewall_tag" {
 variable "firewall_source_ranges" {
   description = "Source ranges for the firewall rule"
   default     = ["0.0.0.0/0"]
+}
+
+variable "firewall_health_checks_source_ranges" {
+  description = "Source range for health check"
+  default     = ["35.191.0.0/16", "130.211.0.0/22"]
 }
 
 # ==================================================
@@ -171,11 +184,6 @@ variable "webapp_disk_type" {
   default     = "pd-balanced"
 }
 
-variable "service_account_email" {
-  description = "Service account email"
-  default     = "packer@tribal-affinity-414200.iam.gserviceaccount.com"
-}
-
 variable "service_account_scopes" {
   description = "Scopes for the service account"
   default     = ["cloud-platform"]
@@ -199,6 +207,51 @@ variable "iam_monitoring_metric_writer_role" {
 variable "pub_sub_publisher_role" {
   description = "The role to assign to the service account"
   default     = "roles/pubsub.publisher"
+}
+
+variable "webapp_service_account" {
+  description = "value of the webapp service account"
+  default     = "webapp-service-account"
+}
+
+variable "webapp_service_account_display_name" {
+  description = "The display name for the webapp service account"
+  default     = "Webapp Service Account"
+}
+
+variable "webapp_template_name" {
+  description = "Name of the webapp instance template"
+  default     = "webapp-template"
+}
+
+variable "webapp_health_check_name" {
+  description = "Name of the webapp health check"
+  default     = "webapp-health-check"
+}
+
+variable "webapp_port" {
+  description = "Port of the webapp health check"
+  default     = 8080
+}
+
+variable "webapp_health_check_path" {
+  description = "Path of the webapp health check"
+  default     = "/healthz"
+}
+
+variable "webapp_manager_name" {
+  description = "Name of the instance group manager"
+  default     = "webapp-instance-group-manager"
+}
+
+variable "webapp_manager_base_instance_name" {
+  description = "Base name of the instances"
+  default     = "webapp"
+}
+
+variable "webapp_autoscaler_name" {
+  description = "Name of the autoscaler"
+  default     = "webapp-autoscaler"
 }
 
 # ==================================================
@@ -324,4 +377,60 @@ variable "email_verifier_function_entry_point" {
 variable "email_verifier_function_event_trigger" {
   description = "The event trigger for the Cloud Function"
   default     = "google.pubsub.topic.publish"
+}
+
+# ==================================================
+# Load balancer  variables
+
+variable "ssl_certificate_name" {
+  description = "The name of the SSL certificate"
+  default     = "webapp-ssl-cert"
+}
+
+variable "https_proxy_name" {
+  description = "The name of the HTTPS proxy"
+  default     = "webapp-https-proxy"
+}
+
+variable "global_forwarding_rule_name" {
+  description = "The name of the global forwarding rule"
+  default     = "webapp-global-forwarding-rule"
+}
+
+variable "url_map_name" {
+  description = "The name of the URL map"
+  default     = "webapp-url-map"
+}
+
+variable "backend_service_name" {
+  description = "The name of the backend service"
+  default     = "webapp-backend-service"
+}
+
+variable "domain_name" {
+  description = "The domain name for the managed SSL certificate"
+  default     = "qccchen.me"
+}
+
+variable "backend_service_protocol" {
+  description = "The protocol used by the backend service"
+  default     = "HTTP"
+}
+
+variable "backend_service_port_name" {
+  description = "The port name for the backend service"
+  default     = "http"
+}
+
+variable "backend_service_timeout_sec" {
+  description = "The timeout in seconds for the backend service"
+  default     = 10
+}
+
+variable "health_check_id" {
+  description = "The ID of the health check used by the backend service"
+}
+
+variable "instance_group_manager_instance_group" {
+  description = "The instance group of the region instance group manager"
 }
