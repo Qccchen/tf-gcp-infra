@@ -34,7 +34,7 @@ data "google_project" "project" {
 }
 
 resource "google_kms_crypto_key_iam_binding" "vm_crypto_key_iam_binding" {
-  crypto_key_id = data.google_kms_crypto_key.vm_key.id
+  crypto_key_id = google_kms_crypto_key.vm_key.id
   role          = var.cryptp_key_role
 
   members = [
@@ -87,7 +87,7 @@ resource "google_compute_region_instance_template" "webapp_template" {
     disk_size_gb = var.webapp_disk_size
     disk_type    = var.webapp_disk_type
     disk_encryption_key {
-      kms_key_self_link = data.google_kms_crypto_key.vm_key.id
+      kms_key_self_link = google_kms_crypto_key.vm_key.id
     }
   }
 
