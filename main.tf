@@ -107,7 +107,7 @@ resource "google_kms_key_ring" "key_ring" {
 
 resource "google_kms_crypto_key" "vm_key" {
   name            = "VM_KEY-${random_pet.key_suffix.id}"
-  key_ring        = data.google_kms_key_ring.key_ring.id
+  key_ring        = google_kms_key_ring.key_ring.id
   rotation_period = "2592000s" 
 
   lifecycle {
@@ -117,7 +117,7 @@ resource "google_kms_crypto_key" "vm_key" {
 
 resource "google_kms_crypto_key" "db_key" {
   name            = "DB_KEY-${random_pet.key_suffix.id}"
-  key_ring        = data.google_kms_key_ring.key_ring.id
+  key_ring        = google_kms_key_ring.key_ring.id
   rotation_period = "2592000s"
 
   lifecycle {
@@ -127,7 +127,7 @@ resource "google_kms_crypto_key" "db_key" {
 
 resource "google_kms_crypto_key" "bucket_key" {
   name            = "BUCKET_KEY-${random_pet.key_suffix.id}"
-  key_ring        = data.google_kms_key_ring.key_ring.id
+  key_ring        = google_kms_key_ring.key_ring.id
   rotation_period = "2592000s"
 
   lifecycle {
