@@ -5,6 +5,7 @@ resource "google_sql_database_instance" "db_instance" {
   database_version = var.db_version
   region           = var.region
   project          = var.project_id
+  encryption_key_name = data.google_kms_crypto_key.db_key.id
   
   settings {
     tier = var.db_tier
@@ -54,3 +55,22 @@ data "template_file" "startup_script" {
   }
 }
 
+resource "google_project_service_identity" "gcp_sa_cloud_sql" {
+  provider = google-beta
+  project  = var.project_id
+  service  = var.db_admin_api
+}
+
+resource "google_kms_crypto_key_iam_binding" "db_crypto_key_iam_binding" {
+  crypto_key_id = data.google_kms_crypto_key.db_key.id
+  role          = var.cryptp_key_role
+
+  members = [
+    "serviceAccount:${google_project_service_identity.gcp_sa_cloud_sql.email}",
+  ]
+}
+
+variable "db_admin_api" {
+  description = "value for the db_admin_api"
+  default = "sqladmin.googleapis.com"
+}

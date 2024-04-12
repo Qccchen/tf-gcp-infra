@@ -95,3 +95,42 @@ resource "google_vpc_access_connector" "serverless_connector" {
   network       = google_compute_network.my_vpc.id
   ip_cidr_range = var.serverless_connector_ip_cidr_range
 }
+
+resource "random_pet" "key_suffix" {
+  length    = 4
+}
+
+resource "google_kms_key_ring" "key_ring" {
+  name     = "WEBAPP_KEY_RING-${random_pet.key_suffix.id}"
+  location = var.region
+}
+
+resource "google_kms_crypto_key" "vm_key" {
+  name            = "VM_KEY-${random_pet.key_suffix.id}"
+  key_ring        = data.google_kms_key_ring.key_ring.id
+  rotation_period = "2592000s" 
+
+  lifecycle {
+    prevent_destroy = true
+  }
+}
+
+resource "google_kms_crypto_key" "db_key" {
+  name            = "DB_KEY-${random_pet.key_suffix.id}"
+  key_ring        = data.google_kms_key_ring.key_ring.id
+  rotation_period = "2592000s"
+
+  lifecycle {
+    prevent_destroy = true
+  }
+}
+
+resource "google_kms_crypto_key" "bucket_key" {
+  name            = "BUCKET_KEY-${random_pet.key_suffix.id}"
+  key_ring        = data.google_kms_key_ring.key_ring.id
+  rotation_period = "2592000s"
+
+  lifecycle {
+    prevent_destroy = true
+  }
+}
