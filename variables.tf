@@ -254,6 +254,11 @@ variable "webapp_autoscaler_name" {
   default     = "webapp-autoscaler"
 }
 
+variable "cryptp_key_role" {
+  description = "value of the crypto key role"
+  default = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
+}
+
 # ==================================================
 # Database instance variables
 
@@ -274,7 +279,7 @@ variable "db_tier" {
 
 variable "db_disk_size" {
   description = "Size of the disk"
-  default     = 100
+  default     = 50
 }
 
 variable "db_disk_type" {
@@ -295,6 +300,11 @@ variable "db_name" {
 variable "db_username" {
   description = "Username for the database"
   default     = "webapp"
+}
+
+variable "db_admin_api" {
+  description = "value for the db_admin_api"
+  default = "sqladmin.googleapis.com"
 }
 
 # ==================================================
@@ -336,7 +346,7 @@ variable "cloud_functions_bucket_name" {
 
 variable "cloud_functions_bucket_location" {
   description = "Location of the bucket to store the Cloud Functions"
-  default     = "US"
+  default     = "us-west2"
 }
 
 variable "function_archive_bucket_object_name" {
@@ -427,10 +437,3 @@ variable "backend_service_timeout_sec" {
   default     = 10
 }
 
-variable "health_check_id" {
-  description = "The ID of the health check used by the backend service"
-}
-
-variable "instance_group_manager_instance_group" {
-  description = "The instance group of the region instance group manager"
-}

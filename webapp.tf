@@ -30,6 +30,19 @@ resource "google_project_iam_binding" "pub_sub_publisher" {
   ]
 }
 
+data "google_project" "project" {
+}
+
+resource "google_kms_crypto_key_iam_binding" "vm_crypto_key_iam_binding" {
+  crypto_key_id = google_kms_crypto_key.vm_key.id
+  role          = var.cryptp_key_role
+
+  members = [
+    "serviceAccount:service-${data.google_project.project.number}@compute-system.iam.gserviceaccount.com",
+    "serviceAccount:${google_service_account.webapp_service_account.email}",
+  ]
+}
+
 # resource "google_compute_instance" "webapp_instance" {
 #   name         = var.webapp_instance_name
 #   machine_type = var.webapp_instance_type
@@ -73,6 +86,9 @@ resource "google_compute_region_instance_template" "webapp_template" {
     source_image = var.webapp_custom_image
     disk_size_gb = var.webapp_disk_size
     disk_type    = var.webapp_disk_type
+    disk_encryption_key {
+      kms_key_self_link = google_kms_crypto_key.vm_key.id
+    }
   }
 
   network_interface {

@@ -23,9 +23,25 @@ resource "google_project_iam_member" "email_publisher_sql_client" {
   member  = "serviceAccount:${google_service_account.email_publisher.email}"
 }
 
+data "google_storage_project_service_account" "gcs_account" {
+}
+
+resource "google_kms_crypto_key_iam_binding" "bucket_crypto_key_iam_binding" {
+  crypto_key_id = google_kms_crypto_key.bucket_key.id
+  role          = var.cryptp_key_role
+
+  members = ["serviceAccount:${data.google_storage_project_service_account.gcs_account.email_address}"]
+}
+
 resource "google_storage_bucket" "cloud_functions_bucket" {
   name     = var.cloud_functions_bucket_name
   location = var.cloud_functions_bucket_location
+
+  encryption {
+    default_kms_key_name = google_kms_crypto_key.bucket_key.id
+  }
+
+  depends_on = [google_kms_crypto_key_iam_binding.bucket_crypto_key_iam_binding]
 }
 
 resource "google_storage_bucket_object" "function_archive" {
