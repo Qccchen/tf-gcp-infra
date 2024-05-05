@@ -17,7 +17,7 @@ Before you begin, ensure you have the following installed:
 Clone this repository to your local machine using Git:
 
 ```bash
-git clone https://github.com/ChenChenChen99/tf-gcp-infra.git
+git clone https://github.com/Qccchen/tf-gcp-infra.git
 cd tf-gcp-infra
 ```
 
@@ -35,12 +35,13 @@ Create a file named terraform.tfvars to store your variable definitions. This fi
 
 ```hcl
 # terraform.tfvars
-region             = "us-west-2"
 project_id         = "your-project-id"
-credentials_file   = "path/to/your/credential"
-vpc_name           = "my-vpc"
-webapp_subnet_cidr = "10.0.1.0/24"
-db_subnet_cidr     = "10.0.2.0/24"
+region             = "us-west-2"
+webapp_instance_zone = "us-west2-a"
+credentials_file     = "path/to/your/credential"
+webapp_custom_image  = "your-custom-image"
+domain_name          = "your-domain-name"
+sendgrid_api_key     = "your-sendgrid-api-key"
 ```
 
 ### 4. Plan the Infrastructure
@@ -63,15 +64,19 @@ Confirm the action by typing yes when prompted.
 
 ## Managing Infrastructure
 
-- To change your infrastructure, modify your Terraform configuration files and repeat the plan and apply steps.
+To change your infrastructure, modify your Terraform configuration files and repeat the plan and apply steps.
 
-- To destroy your infrastructure and delete all resources, run:
+To destroy your infrastructure and delete all resources, run:
 
 ```bash
 terraform destroy
 ```
 
 Confirm the action by typing `yes` when prompted.
+
+## Note: Setting up Cloud DNS
+
+Please note that setting up Cloud DNS for your domain is not automated in this Terraform configuration. After provisioning your infrastructure, you'll need to set up Cloud DNS manually in the Google Cloud Console or through the CLI.
 
 ## Contributors
 
