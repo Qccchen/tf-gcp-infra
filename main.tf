@@ -38,7 +38,6 @@ resource "google_compute_firewall" "allow_application_traffic" {
   }
 
   target_tags   = [var.firewall_tag]
-  # source_ranges = var.firewall_source_ranges
   source_ranges = var.firewall_health_checks_source_ranges
 }
 
@@ -58,10 +57,6 @@ resource "google_compute_firewall" "deny_ssh" {
 resource "google_project_service" "service_networking" {
   service = var.service_networking
   project = var.project_id
-}
-
-resource "google_compute_address" "my_static_ip" {
-  name = var.static_ip_name
 }
 
 resource "google_compute_global_address" "private_services_access" {
@@ -84,7 +79,6 @@ resource "google_dns_record_set" "a" {
   type         = var.dns_type
   ttl          = var.dns_ttl
   managed_zone = var.dns_managed_zone
-  # rrdatas      = [google_compute_instance.webapp_instance.network_interface[0].access_config[0].nat_ip]
   rrdatas      = [google_compute_global_forwarding_rule.default.ip_address]
 }
 
@@ -97,7 +91,7 @@ resource "google_vpc_access_connector" "serverless_connector" {
 }
 
 resource "random_pet" "key_suffix" {
-  length    = 4
+  length    = 1
 }
 
 resource "google_kms_key_ring" "key_ring" {
@@ -109,28 +103,16 @@ resource "google_kms_crypto_key" "vm_key" {
   name            = "VM_KEY-${random_pet.key_suffix.id}"
   key_ring        = google_kms_key_ring.key_ring.id
   rotation_period = "2592000s" 
-
-  lifecycle {
-    prevent_destroy = true
-  }
 }
 
 resource "google_kms_crypto_key" "db_key" {
   name            = "DB_KEY-${random_pet.key_suffix.id}"
   key_ring        = google_kms_key_ring.key_ring.id
   rotation_period = "2592000s"
-
-  lifecycle {
-    prevent_destroy = true
-  }
 }
 
 resource "google_kms_crypto_key" "bucket_key" {
   name            = "BUCKET_KEY-${random_pet.key_suffix.id}"
   key_ring        = google_kms_key_ring.key_ring.id
   rotation_period = "2592000s"
-
-  lifecycle {
-    prevent_destroy = true
-  }
 }
