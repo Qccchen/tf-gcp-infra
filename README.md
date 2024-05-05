@@ -36,8 +36,8 @@ Create a file named terraform.tfvars to store your variable definitions. This fi
 ```hcl
 # terraform.tfvars
 project_id         = "your-project-id"
-region             = "us-west-2"
-webapp_instance_zone = "us-west2-a"
+region             = "your-region"
+webapp_instance_zone = "your-zone"
 credentials_file     = "path/to/your/credential"
 webapp_custom_image  = "your-custom-image"
 domain_name          = "your-domain-name"
