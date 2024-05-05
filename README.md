@@ -76,7 +76,7 @@ Confirm the action by typing `yes` when prompted.
 
 ## Note: Setting up Cloud DNS
 
-Please note that setting up Cloud DNS for your domain is not automated in this Terraform configuration. After provisioning your infrastructure, you'll need to set up Cloud DNS manually in the Google Cloud Console or through the CLI.
+Please note that setting up Cloud DNS for your domain is not automated in this Terraform configuration. After provisioning your infrastructure, you'll need to set up Cloud DNS manually (include NS, TXT, CNAME) in the Google Cloud Console or through the CLI.
 
 ## Contributors
 
