@@ -176,7 +176,7 @@ variable "webapp_custom_image" {
 
 variable "webapp_disk_size" {
   description = "Size of the disk"
-  default     = 100
+  default     = 50
 }
 
 variable "webapp_disk_type" {

@@ -118,7 +118,7 @@ resource "google_compute_region_autoscaler" "webapp_autoscaler" {
     cooldown_period = 60
 
     cpu_utilization {
-      target = 0.05
+      target = 0.8
     }
   }
 }
