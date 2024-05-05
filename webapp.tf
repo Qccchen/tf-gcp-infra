@@ -43,39 +43,6 @@ resource "google_kms_crypto_key_iam_binding" "vm_crypto_key_iam_binding" {
   ]
 }
 
-# resource "google_compute_instance" "webapp_instance" {
-#   name         = var.webapp_instance_name
-#   machine_type = var.webapp_instance_type
-#   zone         = var.webapp_instance_zone
-
-#   tags = [var.firewall_tag]
-
-#   boot_disk {
-#     initialize_params {
-#       image = var.webapp_custom_image
-#       type  = var.webapp_disk_type
-#       size  = var.webapp_disk_size
-#     }
-#   }
-
-#   network_interface {
-#     network    = google_compute_network.my_vpc.id
-#     subnetwork = google_compute_subnetwork.webapp_subnet.id
-#     access_config {
-#       nat_ip = google_compute_address.my_static_ip.address
-#     }
-#   }
-
-#   metadata = {
-#     startup-script = "${data.template_file.startup_script.rendered}"
-#   }
-
-#   service_account {
-#     email = google_service_account.webapp_service_account.email
-#     scopes = var.service_account_scopes
-#   }
-# }
-
 resource "google_compute_region_instance_template" "webapp_template" {
   name = var.webapp_template_name
   machine_type = var.webapp_instance_type
